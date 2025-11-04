@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Environment Control</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏠 Environment Control</h1>
+      <div class="status">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status">Connecting...</span>
+      </div>
+    </header>
+
+    <nav>
+      <button class="nav-btn active" id="btn-dashboard" onclick="showView('dashboard')">Dashboard</button>
+      <button class="nav-btn" id="btn-surveillance" onclick="showView('surveillance')">Surveillance</button>
+    </nav>
+
+    <div id="dashboard-view">
+      <div class="grid">
+        <!-- Environment: combined temperatures/humidity/pressure -->
+        <div class="card">
+          <h2>🌡️ Environment</h2>
+          <div class="sensor-row">
+            <span class="sensor-label">Temperature</span>
+            <span class="sensor-value"><span id="envTemp">--</span><span class="sensor-unit">°C</span></span>
+          </div>
+          <div class="sensor-row">
+            <span class="sensor-label">Humidity</span>
+            <span class="sensor-value"><span id="envHum">--</span><span class="sensor-unit">%</span></span>
+          </div>
+          <div class="sensor-row">
+            <span class="sensor-label">Pressure</span>
+            <span class="sensor-value"><span id="envPress">--</span><span class="sensor-unit">hPa</span></span>
+          </div>
+          <div class="sensor-row">
+            <span class="sensor-label">Source Temps</span>
+            <span class="sensor-value" style="font-size:12px;color:#777;">
+              DHT:<span id="dhtTemp">--</span>°C&nbsp;|&nbsp;BMP:<span id="bmpTemp">--</span>°C
+            </span>
+          </div>
+        </div>
+
+        <!-- MQ135 card -->
+        <div class="card">
+          <h2>🌬️ Air Quality (MQ135)</h2>
+          <div class="sensor-row">
+            <span class="sensor-label">Status</span>
+            <span class="sensor-value" id="mqStatus">--</span>
+          </div>
+          <div class="sensor-row">
+            <span class="sensor-label">Raw Value</span>
+            <span class="sensor-value"><span id="mqRaw">--</span></span>
+          </div>
+          <div class="sensor-row">
+            <span class="sensor-label">Issue</span>
+            <span class="sensor-value" id="mqIssue" style="font-size:14px;color:#b91c1c">None</span>
+          </div>
+        </div>
+
+        <!-- RFID card -->
+        <div class="card">
+          <h2>🔐 RFID</h2>
+          <div class="sensor-row">
+            <span class="sensor-label">Last UID</span>
+            <span class="sensor-value" id="rfidUid">--</span>
+          </div>
+          <div class="sensor-row">
+            <span class="sensor-label">Access</span>
+            <span class="sensor-value" id="rfidAccess">--</span>
+          </div>
+          <div class="sensor-row">
+            <span class="sensor-label">Authorized Tag</span>
+            <span class="sensor-value">B142201D</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-panel" id="control-panel">
+        <div class="mode-switch">
+          <h2>⚙️ Control Panel</h2>
+          <div class="toggle-group">
+            <span class="toggle-label">Auto</span>
+            <label class="switch">
+              <input type="checkbox" id="mode-toggle">
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Manual</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="control-item" id="fan-control" onclick="toggleFan()">
+            <div class="control-icon">🌀</div>
+            <div class="control-name">Fan</div>
+            <div class="control-status" id="fan-status">OFF</div>
+          </div>
+
+          <div class="control-item" id="light-control" onclick="toggleLight()">
+            <div class="control-icon">💡</div>
+            <div class="control-name">Light</div>
+            <div class="control-status" id="light-status">OFF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="surveillance-view" style="display:none;">
+      <div class="video-card">
+        <h2>📹 Live Camera Feed</h2>
+        <div class="video-container" style="text-align:center;">
+          <img id="liveFeed" alt="Connecting to video feed..." style="width:90%;max-width:700px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.3);" referrerpolicy="no-referrer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
