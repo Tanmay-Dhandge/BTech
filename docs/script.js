@@ -186,6 +186,12 @@ function toggleMode() {
     client.send(message);
 }
 
+function toggleDoor() {
+  var message = new Paho.MQTT.Message("door-open");
+  message.destinationName = "project/control";
+  client.send(message);
+}
+
 function showView(viewName) {
     if (viewName === 'dashboard') {
         document.getElementById('dashboard-view').style.display = 'block';
